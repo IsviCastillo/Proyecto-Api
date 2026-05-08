@@ -33,10 +33,7 @@ export class Database {
             password: this.password,
             database: this.database,
             entities: [User],
-            // Evitar sincronización automática en tiempo de ejecución para prevenir
-            // queries paralelos sobre el mismo cliente (y el DeprecationWarning de pg).
-            // Habilitar migraciones en su lugar en entornos reales.
-            synchronize: false
+            synchronize: true
         });
     }
 
