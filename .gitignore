@@ -5,4 +5,3 @@
 !.gitignore
 !package.json
 !tsconfig.json
-!.env
