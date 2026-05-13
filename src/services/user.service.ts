@@ -1,39 +1,45 @@
-import { Database } from "../database/db";
 import { User } from "../entities/user.entity";
+import { Database } from "../database/db";
+import { IUser } from "../interfaces/user.interface";
 
 export class UserService {
-    private repo = Database.getDataBaseInstance().getDataSource().getRepository(User);
 
-    async getAll(){
-        return await this.repo.find();
-    }
-    async getById(id:string){
-        return await this.repo.findOneBy({id});
-    }
-    async create(data: any) {
-        if (!data.nombre) throw new Error("Nombre requerido")
+    private database = Database.getDataBaseInstance();
 
-    const emailRegex = /\S+@\S+\.\S+/
-    if (!emailRegex.test(data.email)) {
-      throw new Error("Email inválido")
+    private userRepository = this.database
+        .getDataSource()
+        .getRepository(User);
+
+    getAllUsers() {
+        return this.userRepository.find();
     }
 
-    const user = this.repo.create(data)
-    return await this.repo.save(user)
-  }
+    async getUserById(id: string) {
 
-  async update(id: string, data: any) {
-    const user = await this.getById(id)
-    if (!user) throw new Error("Usuario no encontrado")
+        const user = await this.userRepository.findOneBy({ id });
 
-    Object.assign(user, data)
-    return await this.repo.save(user)
-  }
+        if (user !== null) {
 
-  async delete(id: string) {
-    const user = await this.getById(id)
-    if (!user) throw new Error("Usuario no encontrado")
+            return {
+                id: user.id,
+                nombre: user.nombre,
+                email: user.email
+            };
 
-    return await this.repo.remove(user)
-  }
+        } else {
+
+            return null;
+        }
+    }
+
+    createUser(user: IUser) {
+
+        const newUser = new User();
+
+        newUser.nombre = user.nombre!;
+        newUser.email = user.email!;
+        newUser.password = user.password!;
+
+        return this.userRepository.save(newUser);
+    }
 }

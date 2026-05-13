@@ -1,43 +1,42 @@
-import { Request, Response } from "express"
-import { UserService } from "../services/user.service"
-
-const service = new UserService()
+import { Request, Response } from "express";
+import { UserService } from "../services/user.service";
+import { IUser } from "../interfaces/user.interface";
 
 export class UserController {
-  async getUsers(req: Request, res: Response) {
-    const data = await service.getAll()
-    res.json({ status: 200, data })
-  }
 
-  async getProfile(req: Request, res: Response) {
-    const data = await service.getById(req.params.id as string)
-    res.json({ status: 200, data })
-  }
+    private userService: UserService;
 
-  async createUser(req: Request, res: Response) {
-    try {
-      const data = await service.create(req.body)
-      res.json({ status: 200, data })
-    } catch (error: any) {
-      res.status(400).json({ message: error.message })
+    constructor(userService: UserService) {
+        this.userService = userService;
     }
-  }
 
-  async updateUser(req: Request, res: Response) {
-    try {
-      const data = await service.update(req.params.id as string, req.body)
-      res.json({ status: 200, data })
-    } catch (error: any) {
-      res.status(400).json({ message: error.message })
-    }
-  }
+    async getAllUsers(req: Request, res: Response) {
 
-  async deleteUser(req: Request, res: Response) {
-    try {
-      await service.delete(req.params.id as string)
-      res.json({ status: 200, message: "Eliminado" })
-    } catch (error: any) {
-      res.status(400).json({ message: error.message })
+        const users = await this.userService.getAllUsers();
+
+        res.status(200).json({
+            data: users,
+        });
     }
-  }
+
+    async getUserById(req: Request, res: Response) {
+        const { id } = req.params;
+        const user = await this.userService.getUserById(id);
+
+        res.status(200).json({
+            data: user,
+        });
+    }
+
+
+    async createUser(req: Request, res: Response) {
+
+        const user: IUser = req.body;
+
+        await this.userService.createUser(user);
+
+        res.status(201).json({
+            message: "Usuario creado correctamente",
+        });
+    }
 }
