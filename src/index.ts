@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express, { Request, Response } from "express";
+import categoryRouter from "./routes/category.routes";
 import 'reflect-metadata';
-
 import { Database } from "./database/db";
 import userRouter from "./routes/user.routes";
 
@@ -12,6 +12,9 @@ app.use(express.json());
 
 // Rutas de usuarios
 app.use("/api", userRouter);
+
+// Rutas de categorías
+app.use("/api", categoryRouter);
 
 async function main(): Promise<void> {
 
@@ -36,6 +39,7 @@ app.listen(3000, async () => {
 
 app.use(express.json());
 app.use("/api", userRouter);
+app.use("/api", categoryRouter);
 app.listen(3000, () => {
     console.log("Servidor iniciado en el puerto 3000");
 }

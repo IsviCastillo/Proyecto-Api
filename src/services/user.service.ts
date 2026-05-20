@@ -42,4 +42,31 @@ export class UserService {
 
         return this.userRepository.save(newUser);
     }
+    async updateUser(id: string, user: IUser) {
+
+    const existingUser = await this.userRepository.findOneBy({ id });
+
+    if (!existingUser) {
+        return null;
+    }
+
+    existingUser.nombre = user.nombre!;
+    existingUser.email = user.email!;
+    existingUser.password = user.password!;
+
+    return this.userRepository.save(existingUser);
+}
+
+async deleteUser(id: string) {
+
+    const existingUser = await this.userRepository.findOneBy({ id });
+
+    if (!existingUser) {
+        return null;
+    }
+
+    await this.userRepository.remove(existingUser);
+
+    return true;
+}
 }
