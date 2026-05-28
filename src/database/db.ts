@@ -34,7 +34,10 @@ export class Database {
             password: this.password,
             database: this.database,
             entities: [User, Category], 
-            synchronize: true
+            synchronize: true,
+              logging: false,
+              ssl:true,
+              entities: ["src/entities/*.ts"],
         });
     }
 
