@@ -31,30 +31,57 @@ export class UserController {
         });
     }
 
-    async createUser(req: Request, res: Response) {
+async createUser(req: Request, res: Response) {
 
-        const user: IUser = req.body;
+    const user: IUser = req.body;
 
-        await this.userService.createUser(user);
+    if (!user.nombre || !user.email || !user.password) {
 
-        res.status(201).json({
-            message: "Usuario creado correctamente",
+        return res.status(400).json({
+            message: "Todos los campos son obligatorios"
+        });
+    }
+    if (!user.email.includes("@")) {
+
+        return res.status(400).json({
+            message: "Email inválido"
         });
     }
 
-    async updateUser(req: Request, res: Response) {
+    await this.userService.createUser(user);
 
-        const { id } = req.params;
+    res.status(201).json({
+        message: "Usuario creado correctamente",
+    });
+}
 
-        const user: IUser = req.body;
+async updateUser(req: Request, res: Response) {
 
-        const updatedUser = await this.userService.updateUser(id, user);
+    const id = req.params.id!;
 
-        res.status(200).json({
-            message: "Usuario actualizado correctamente",
-            data: updatedUser
+    const user: IUser = req.body;
+
+    if (!user.nombre || !user.email || !user.password) {
+
+        return res.status(400).json({
+            message: "Todos los campos son obligatorios"
         });
     }
+
+    if (!user.email.includes("@")) {
+
+        return res.status(400).json({
+            message: "Email inválido"
+        });
+    }
+
+    const updatedUser = await this.userService.updateUser(id, user);
+
+    res.status(200).json({
+        message: "Usuario actualizado correctamente",
+        data: updatedUser
+    });
+}
 
     async deleteUser(req: Request, res: Response) {
 
