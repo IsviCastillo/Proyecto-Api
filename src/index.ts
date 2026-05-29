@@ -1,27 +1,24 @@
 import 'dotenv/config';
 import express, { Request, Response } from "express";
-import categoryRouter from "./routes/category.routes";
 import 'reflect-metadata';
+import cors from "cors";
 import { Database } from "./database/db";
 import userRouter from "./routes/user.routes";
+import categoryRouter from "./routes/category.routes";
+import productRouter from "./routes/product.routes";
+import orderRouter from "./routes/order.routes";
 
 const app = express();
 
-// Middleware para recibir JSON
+// Middleware
 app.use(express.json());
+app.use(cors());
 
-// Rutas de usuarios
+// Rutas
 app.use("/api", userRouter);
-
-// Rutas de categorías
 app.use("/api", categoryRouter);
-
-async function main(): Promise<void> {
-
-  const db: Database = Database.getDataBaseInstance();
-
-  await db.init();
-}
+app.use("/api", productRouter);
+app.use("/api", orderRouter);
 
 // Ruta principal
 app.get(
@@ -30,17 +27,16 @@ app.get(
     res.send('Hello World!')
 );
 
-app.listen(3000, async () => {
+async function main(): Promise<void> {
 
-  console.log('Servidor iniciado en el puerto 3000');
+  const db: Database = Database.getDataBaseInstance();
 
-  await main();
-});
+  await db.init();
 
-app.use(express.json());
-app.use("/api", userRouter);
-app.use("/api", categoryRouter);
-app.listen(3000, () => {
+  app.listen(3000, () => {
     console.log("Servidor iniciado en el puerto 3000");
+  });
+
 }
-);
+
+main();

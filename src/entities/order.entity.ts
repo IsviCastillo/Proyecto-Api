@@ -5,17 +5,14 @@ import {
 } from "typeorm";
 
 @Entity()
-export class Product {
+export class Order {
 
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
     @Column()
-    nombre!: string;
+    cliente!: string;
 
     @Column("decimal")
-    precio!: number;
-
-    @Column()
-    imagen!: string;
+    total!: number;
 }
