@@ -29,22 +29,21 @@ export class Database {
         this.password = password;
         this.database = database;
         this.typeormDataSource = new DataSource({
-            type: 'postgres',
-            host: this.host,
-            port: this.port,
-            username: this.username,
-            password: this.password,
-            database: this.database,
-            entities: [User, Category, Product, Order], 
-            synchronize: true,
-              logging: false,
-              ssl:true,
-              entities: [
-                User,
-                Category,
-                Product,
-                Order
-              ],
+    type: 'postgres',
+    host: this.host,
+    port: this.port,
+    username: this.username,
+    password: this.password,
+    database: this.database,
+    entities: [
+        User,
+        Category,
+        Product,
+        Order
+    ],
+    synchronize: true,
+    logging: false,
+    ssl: true
         });
     }
 

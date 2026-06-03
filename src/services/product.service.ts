@@ -1,19 +1,29 @@
+import { Repository } from "typeorm";
+
+import { Product } from "../entities/product.entity";
+
+import { Database } from "../database/db";
+
+
 export class ProductService {
+
+    private repository: Repository<Product>;
+
+    constructor() {
+
+        this.repository =
+            Database.getDataBaseInstance()
+                .getDataSource()
+                .getRepository(Product);
+    }
 
     async getAllProducts() {
 
-        return [
-            {
-                id: "1",
-                nombre: "Laptop",
-                precio: 1200,
-                imagen: "https://placehold.co/300"
-            }
-        ];
+        return await this.repository.find();
     }
 
-    async createProduct(product: any) {
+    async createProduct(product: Product) {
 
-        return product;
+        return await this.repository.save(product);
     }
 }

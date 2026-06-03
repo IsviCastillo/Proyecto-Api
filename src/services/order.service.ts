@@ -1,27 +1,35 @@
+import { Repository } from "typeorm";
+
+import { Order } from "../entities/order.entity";
+
+import { Database } from "../database/db";
+
 export class OrderService {
+
+    private repository: Repository<Order>;
+
+    constructor() {
+
+        this.repository =
+            Database.getDataBaseInstance()
+                .getDataSource()
+                .getRepository(Order);
+    }
 
     async getAllOrders() {
 
-        return [
-            {
-                id: "1",
-                cliente: "Isvi",
-                total: 500
-            }
-        ];
+        return await this.repository.find();
     }
 
     async getOrderById(id: string) {
 
-        return {
-            id,
-            cliente: "Isvi",
-            total: 500
-        };
+        return await this.repository.findOne({
+            where: { id }
+        });
     }
 
-    async createOrder(order: any) {
+    async createOrder(order: Order) {
 
-        return order;
+        return await this.repository.save(order);
     }
 }
